@@ -1,0 +1,7 @@
+{
+  "G2": {"lower": 3.0, "upper": 19.0},
+  "absences": {"lower": -9.0, "upper": 15.0},
+  "G1": {"lower": 3.0, "upper": 19.0},
+  "age": {"lower": 13.0, "upper": 21.0},
+  "goout": {"lower": -1.0, "upper": 7.0}
+}
