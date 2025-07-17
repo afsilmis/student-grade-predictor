@@ -503,19 +503,57 @@ if predict_button:
             # Summary statistics
             st.markdown("### Impact Summary")
             col1, col2, col3 = st.columns(3)
-            
+                        
             with col1:
-                total_positive = shap_df[shap_df['shap_value'] > 0]['shap_value'].sum()
-                st.metric("Total Positive Impact", f"+{total_positive:.2f}")
+                with st.container():
+                    st.markdown("""
+                    <div style="
+                        border: 2px solid #e0e0e0;
+                        border-radius: 10px;
+                        padding: 15px;
+                        background-color: #f9f9f9;
+                        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    ">
+                    """, unsafe_allow_html=True)
+                    
+                    total_positive = shap_df[shap_df['shap_value'] > 0]['shap_value'].sum()
+                    st.metric("Total Positive Impact", f"+{total_positive:.2f}")
+                    
+                    st.markdown("</div>", unsafe_allow_html=True)
             
             with col2:
-                total_negative = shap_df[shap_df['shap_value'] < 0]['shap_value'].sum()
-                st.metric("Total Negative Impact", f"{total_negative:.2f}")
+                with st.container():
+                    st.markdown("""
+                    <div style="
+                        border: 2px solid #e0e0e0;
+                        border-radius: 10px;
+                        padding: 15px;
+                        background-color: #f9f9f9;
+                        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    ">
+                    """, unsafe_allow_html=True)
+                    
+                    total_negative = shap_df[shap_df['shap_value'] < 0]['shap_value'].sum()
+                    st.metric("Total Negative Impact", f"{total_negative:.2f}")
+                    
+                    st.markdown("</div>", unsafe_allow_html=True)
             
             with col3:
-                net_impact = total_positive + total_negative
-                st.metric("Net Impact", f"{net_impact:.2f}")
-            
+                with st.container():
+                    st.markdown("""
+                    <div style="
+                        border: 2px solid #e0e0e0;
+                        border-radius: 10px;
+                        padding: 15px;
+                        background-color: #f9f9f9;
+                        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    ">
+                    """, unsafe_allow_html=True)
+                    
+                    net_impact = total_positive + total_negative
+                    st.metric("Net Impact", f"{net_impact:.2f}")
+                    
+                    st.markdown("</div>", unsafe_allow_html=True)            
         except Exception as e:
             st.error(f"Could not generate SHAP analysis: {str(e)}")
             st.info("SHAP analysis requires the explainer to be loaded. Please ensure SHAP is properly configured.")
