@@ -4,6 +4,7 @@ import json
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
+import shap
 
 # Page configuration
 st.set_page_config(
@@ -82,6 +83,7 @@ def load_model_and_features():
         return None, None, None
 
 model, selected_features, bounds = load_model_and_features()
+explainer = shap.TreeExplainer(model)
 
 # Header
 st.markdown("""
