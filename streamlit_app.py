@@ -385,7 +385,7 @@ if predict_button:
             with col1:
                 st.markdown("""
                 <div style="background: linear-gradient(135deg, #2E8B57 0%, #2E8B57CC 100%); 
-                            padding: 1.5rem; border-radius: 15px; color: white; margin-bottom: 1rem;">
+                            padding: 1rem; border-radius: 15px; color: white; margin-bottom: 1rem;">
                     <h5><i class="bi bi-arrow-up-circle"></i> Top Factors Boosting Grade</h5>
                 </div>
                 """, unsafe_allow_html=True)
@@ -419,7 +419,7 @@ if predict_button:
             with col2:
                 st.markdown("""
                 <div style="background: linear-gradient(135deg, #DC143C 0%, #DC143CCC 100%); 
-                            padding: 1.5rem; border-radius: 15px; color: white; margin-bottom: 1rem;">
+                            padding: 1rem; border-radius: 15px; color: white; margin-bottom: 1rem;">
                     <h5><i class="bi bi-arrow-down-circle"></i> Top Factors Lowering Grade</h5>
                 </div>
                 """, unsafe_allow_html=True)
