@@ -407,7 +407,7 @@ if predict_button:
                         impact_color = '#f8f9fa' if impact_strength > 1 else '#f8f9fa'
                         
                         st.markdown(f"""
-                        <div style="background: {impact_color}; padding: 1rem; 
+                        <div style="background: {impact_color}; padding: 1rem; margin: 0.5rem 0;
                                     border-radius: 10px; border-left: 4px solid #2E8B57;">
                             <strong>{feature_display}</strong><br>
                             <small>Value: {row['feature_value']:.1f} | Impact: +{row['shap_value']:.2f}</small>
@@ -441,7 +441,7 @@ if predict_button:
                         impact_color = '#f8f9fa' if impact_strength > 1 else '#f8f9fa'
                         
                         st.markdown(f"""
-                        <div style="background: {impact_color}; padding: 1rem; 
+                        <div style="background: {impact_color}; padding: 1rem; margin: 0.5rem 0;
                                     border-radius: 10px; border-left: 4px solid #DC143C;">
                             <strong>{feature_display}</strong><br>
                             <small>Value: {row['feature_value']:.1f} | Impact: {row['shap_value']:.2f}</small>
