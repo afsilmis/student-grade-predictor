@@ -354,7 +354,7 @@ if predict_button:
         
         # SHAP Analysis Section
         st.markdown("---")
-        st.markdown("## 🔍 Feature Impact Analysis")
+        st.markdown("### Feature Impact Analysis")
         
         try:
             # Calculate SHAP values for this prediction
@@ -386,7 +386,7 @@ if predict_button:
                 st.markdown("""
                 <div style="background: linear-gradient(135deg, #2E8B57 0%, #2E8B57CC 100%); 
                             padding: 1.5rem; border-radius: 15px; color: white; margin-bottom: 1rem;">
-                    <h4><i class="bi bi-arrow-up-circle"></i> Top Factors Boosting Grade</h4>
+                    <h5><i class="bi bi-arrow-up-circle"></i> Top Factors Boosting Grade</h5>
                 </div>
                 """, unsafe_allow_html=True)
                 
@@ -420,7 +420,7 @@ if predict_button:
                 st.markdown("""
                 <div style="background: linear-gradient(135deg, #DC143C 0%, #DC143CCC 100%); 
                             padding: 1.5rem; border-radius: 15px; color: white; margin-bottom: 1rem;">
-                    <h4><i class="bi bi-arrow-down-circle"></i> Top Factors Lowering Grade</h4>
+                    <h5><i class="bi bi-arrow-down-circle"></i> Top Factors Lowering Grade</h5>
                 </div>
                 """, unsafe_allow_html=True)
                 
@@ -451,7 +451,7 @@ if predict_button:
                     st.info("No features are negatively impacting the grade prediction.")
             
             # SHAP waterfall plot
-            st.markdown("### 📊 Detailed Feature Impact")
+            st.markdown("### Detailed Feature Impact")
             
             # Create waterfall-style visualization
             fig_shap = go.Figure()
@@ -501,7 +501,7 @@ if predict_button:
             st.plotly_chart(fig_shap, use_container_width=True)
             
             # Summary statistics
-            st.markdown("### 📈 Impact Summary")
+            st.markdown("### Impact Summary")
             col1, col2, col3 = st.columns(3)
             
             with col1:
@@ -522,7 +522,7 @@ if predict_button:
         
         # Recommendations
         st.markdown("---")
-        st.markdown("### 💡 Recommendations")
+        st.markdown("### Recommendations")
         
         # Generate recommendations based on SHAP analysis
         recommendations = []
