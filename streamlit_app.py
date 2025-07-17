@@ -352,16 +352,216 @@ if predict_button:
                 delta=None
             )
         
+        # SHAP Analysis Section
+        st.markdown("---")
+        st.markdown("## 🔍 Feature Impact Analysis")
+        
+        try:
+            # Calculate SHAP values for this prediction
+            shap_values = explainer.shap_values(input_df)
+            
+            # Get feature names and their SHAP values
+            feature_names = input_df.columns.tolist()
+            shap_vals = shap_values[0] if isinstance(shap_values, list) else shap_values[0]
+            
+            # Create dataframe for easier handling
+            shap_df = pd.DataFrame({
+                'feature': feature_names,
+                'shap_value': shap_vals,
+                'feature_value': input_df.iloc[0].values
+            })
+            
+            # Sort by absolute SHAP value
+            shap_df['abs_shap'] = abs(shap_df['shap_value'])
+            shap_df = shap_df.sort_values('abs_shap', ascending=False)
+            
+            # Split into positive and negative impacts
+            positive_features = shap_df[shap_df['shap_value'] > 0].head(3)
+            negative_features = shap_df[shap_df['shap_value'] < 0].head(3)
+            
+            # Display top factors
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.markdown("""
+                <div style="background: linear-gradient(135deg, #2E8B57 0%, #2E8B57CC 100%); 
+                            padding: 1.5rem; border-radius: 15px; color: white; margin-bottom: 1rem;">
+                    <h4><i class="bi bi-arrow-up-circle"></i> Top Factors Boosting Grade</h4>
+                </div>
+                """, unsafe_allow_html=True)
+                
+                if len(positive_features) > 0:
+                    for idx, row in positive_features.iterrows():
+                        # Format feature name
+                        feature_display = {
+                            'G1': 'First Period Grade',
+                            'G2': 'Second Period Grade',
+                            'age': 'Age',
+                            'sex_M': 'Gender (Male)',
+                            'course_por': 'Course (Portuguese)',
+                            'absences': 'Absences',
+                            'goout': 'Social Activity'
+                        }.get(row['feature'], row['feature'])
+                        
+                        impact_strength = abs(row['shap_value'])
+                        impact_color = "#90EE90" if impact_strength > 1 else "#98FB98"
+                        
+                        st.markdown(f"""
+                        <div style="background: {impact_color}; padding: 1rem; margin: 0.5rem 0; 
+                                    border-radius: 10px; border-left: 4px solid #2E8B57;">
+                            <strong>{feature_display}</strong><br>
+                            <small>Value: {row['feature_value']:.1f} | Impact: +{row['shap_value']:.2f}</small>
+                        </div>
+                        """, unsafe_allow_html=True)
+                else:
+                    st.info("No features are positively impacting the grade prediction.")
+            
+            with col2:
+                st.markdown("""
+                <div style="background: linear-gradient(135deg, #DC143C 0%, #DC143CCC 100%); 
+                            padding: 1.5rem; border-radius: 15px; color: white; margin-bottom: 1rem;">
+                    <h4><i class="bi bi-arrow-down-circle"></i> Top Factors Lowering Grade</h4>
+                </div>
+                """, unsafe_allow_html=True)
+                
+                if len(negative_features) > 0:
+                    for idx, row in negative_features.iterrows():
+                        # Format feature name
+                        feature_display = {
+                            'G1': 'First Period Grade',
+                            'G2': 'Second Period Grade',
+                            'age': 'Age',
+                            'sex_M': 'Gender (Male)',
+                            'course_por': 'Course (Portuguese)',
+                            'absences': 'Absences',
+                            'goout': 'Social Activity'
+                        }.get(row['feature'], row['feature'])
+                        
+                        impact_strength = abs(row['shap_value'])
+                        impact_color = "#FFB6C1" if impact_strength > 1 else "#FFC0CB"
+                        
+                        st.markdown(f"""
+                        <div style="background: {impact_color}; padding: 1rem; margin: 0.5rem 0; 
+                                    border-radius: 10px; border-left: 4px solid #DC143C;">
+                            <strong>{feature_display}</strong><br>
+                            <small>Value: {row['feature_value']:.1f} | Impact: {row['shap_value']:.2f}</small>
+                        </div>
+                        """, unsafe_allow_html=True)
+                else:
+                    st.info("No features are negatively impacting the grade prediction.")
+            
+            # SHAP waterfall plot
+            st.markdown("### 📊 Detailed Feature Impact")
+            
+            # Create waterfall-style visualization
+            fig_shap = go.Figure()
+            
+            # Sort features by SHAP value for better visualization
+            sorted_features = shap_df.sort_values('shap_value', ascending=True)
+            
+            # Colors for positive and negative impacts
+            colors = ['#DC143C' if x < 0 else '#2E8B57' for x in sorted_features['shap_value']]
+            
+            # Format feature names for display
+            display_names = []
+            for feature in sorted_features['feature']:
+                display_name = {
+                    'G1': 'First Period Grade',
+                    'G2': 'Second Period Grade',
+                    'age': 'Age',
+                    'sex_M': 'Gender',
+                    'course_por': 'Course',
+                    'absences': 'Absences',
+                    'goout': 'Social Activity'
+                }.get(feature, feature)
+                display_names.append(display_name)
+            
+            fig_shap.add_trace(go.Bar(
+                y=display_names,
+                x=sorted_features['shap_value'],
+                orientation='h',
+                marker_color=colors,
+                text=[f"{val:.3f}" for val in sorted_features['shap_value']],
+                textposition='auto',
+                hovertemplate='<b>%{y}</b><br>Impact: %{x:.3f}<extra></extra>'
+            ))
+            
+            fig_shap.update_layout(
+                title="Feature Impact on Grade Prediction",
+                xaxis_title="SHAP Value (Impact on Grade)",
+                yaxis_title="Features",
+                height=400,
+                showlegend=False,
+                template='plotly_white'
+            )
+            
+            # Add vertical line at 0
+            fig_shap.add_vline(x=0, line_dash="dash", line_color="gray")
+            
+            st.plotly_chart(fig_shap, use_container_width=True)
+            
+            # Summary statistics
+            st.markdown("### 📈 Impact Summary")
+            col1, col2, col3 = st.columns(3)
+            
+            with col1:
+                total_positive = shap_df[shap_df['shap_value'] > 0]['shap_value'].sum()
+                st.metric("Total Positive Impact", f"+{total_positive:.2f}")
+            
+            with col2:
+                total_negative = shap_df[shap_df['shap_value'] < 0]['shap_value'].sum()
+                st.metric("Total Negative Impact", f"{total_negative:.2f}")
+            
+            with col3:
+                net_impact = total_positive + total_negative
+                st.metric("Net Impact", f"{net_impact:.2f}")
+            
+        except Exception as e:
+            st.error(f"Could not generate SHAP analysis: {str(e)}")
+            st.info("SHAP analysis requires the explainer to be loaded. Please ensure SHAP is properly configured.")
+        
         # Recommendations
         st.markdown("---")
-        st.markdown("### Recommendations")
+        st.markdown("### 💡 Recommendations")
+        
+        # Generate recommendations based on SHAP analysis
+        recommendations = []
         
         if prediction_final < 10:
-            st.error("🚨 **Immediate Action Required**: Consider extra tutoring and study support.")
+            recommendations.append("🚨 **Immediate Action Required**: Consider extra tutoring and study support.")
         elif prediction_final < 14:
-            st.warning("⚠️ **Improvement Needed**: Regular study schedule and attendance focus recommended.")
+            recommendations.append("⚠️ **Improvement Needed**: Regular study schedule and attendance focus recommended.")
         else:
-            st.success("✅ **Good Progress**: Continue current study habits and maintain consistency.")
+            recommendations.append("✅ **Good Progress**: Continue current study habits and maintain consistency.")
+        
+        # Add SHAP-based recommendations
+        try:
+            if len(negative_features) > 0:
+                top_negative = negative_features.iloc[0]
+                if top_negative['feature'] == 'absences' and top_negative['feature_value'] > 5:
+                    recommendations.append("📚 **Attendance Focus**: High absences are significantly impacting performance. Improve attendance.")
+                elif top_negative['feature'] == 'goout' and top_negative['feature_value'] > 3:
+                    recommendations.append("🎯 **Balance Social Life**: High social activity might be affecting studies. Consider better time management.")
+                elif top_negative['feature'] in ['G1', 'G2'] and top_negative['feature_value'] < 12:
+                    recommendations.append("📖 **Academic Support**: Previous grades suggest need for additional study support in this subject.")
+            
+            if len(positive_features) > 0:
+                top_positive = positive_features.iloc[0]
+                if top_positive['feature'] in ['G1', 'G2']:
+                    recommendations.append("🌟 **Strength Identified**: Strong performance in previous periods. Maintain this momentum!")
+        except:
+            pass
+        
+        # Display recommendations
+        for rec in recommendations:
+            if "🚨" in rec:
+                st.error(rec)
+            elif "⚠️" in rec:
+                st.warning(rec)
+            elif "✅" in rec or "🌟" in rec:
+                st.success(rec)
+            else:
+                st.info(rec)
             
     except Exception as e:
         st.error(f"Error making prediction: {str(e)}")
