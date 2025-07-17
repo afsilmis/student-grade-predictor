@@ -404,7 +404,7 @@ if predict_button:
                         }.get(row['feature'], row['feature'])
                         
                         impact_strength = abs(row['shap_value'])
-                        impact_color = #f8f9fa if impact_strength > 1 else #f8f9fa
+                        impact_color = '#f8f9fa' if impact_strength > 1 else '#f8f9fa'
                         
                         st.markdown(f"""
                         <div style="background: {impact_color}; padding: 1rem; margin: 0.5rem 0; 
@@ -438,7 +438,7 @@ if predict_button:
                         }.get(row['feature'], row['feature'])
                         
                         impact_strength = abs(row['shap_value'])
-                        impact_color = #f8f9fa if impact_strength > 1 else #f8f9fa
+                        impact_color = '#f8f9fa' if impact_strength > 1 else '#f8f9fa'
                         
                         st.markdown(f"""
                         <div style="background: {impact_color}; padding: 1rem; margin: 0.5rem 0; 
