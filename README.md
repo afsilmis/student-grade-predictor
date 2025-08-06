@@ -162,4 +162,4 @@ To use the application:
 
 - **Author:** Az-Zukhrufu Fi Silmi Suwondo
 - **Email:** afsilmis@gmail.com
-- **GitHub:** github.com/afsilmis
+- **GitHub:** github.com/afsilmis/
