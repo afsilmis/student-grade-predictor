@@ -162,4 +162,4 @@ To use the application:
 
 - **Author:** Az-Zukhrufu Fi Silmi Suwondo
 - **Email:** afsilmis@gmail.com
-- **GitHub:** [https://github.com/afsilmis/student-grade-predictor] (https://github.com/afsilmis/student-grade-predictor)
+- **GitHub:** github.com/afsilmis
